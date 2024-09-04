@@ -2,3 +2,4 @@
 /.idea
 .sesskey
 .env
+/api/model
