@@ -35,12 +35,13 @@ def generate_image(url="http://127.0.0.1:8000/generate", payload=None, save_path
     # Define the payload for the POST
     if not payload:
         payload = {
-            "prompt": "1boy, pale skin, {purple eyes}, sanpaku, very long hair, pink hair, teeth, bloomers, slippers, waist apron, handgun, lollipop, spoon, best quality, amazing quality, very aesthetic, absurdres, masterpiece",
+            "prompt": "1girl, pale skin, {purple eyes}, sanpaku, very long hair, pink hair, teeth, bloomers, slippers, waist apron, lollipop, spoon, best quality, amazing quality, very aesthetic, absurdres, masterpiece",
             "height": 1216,
             "width": 832,
             "num_inference_steps": 28,
             "guidance_scale": 5.0,
-            "clip_skip": 2
+            "clip_skip": 2,
+            "seed": -1
         }
 
 

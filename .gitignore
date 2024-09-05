@@ -4,3 +4,7 @@
 .env
 /api/model
 /data
+/api/generated_image_api.png
+/api/output_image.png
+/test_api.py
+/api/1.png

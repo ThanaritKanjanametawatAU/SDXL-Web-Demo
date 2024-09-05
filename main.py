@@ -4,6 +4,8 @@ from fastcore.parallel import threaded
 import uuid, os, uvicorn, requests
 from PIL import Image
 from api.call_api import *
+from pyngrok import ngrok
+
 
 
 load_dotenv()
@@ -87,8 +89,18 @@ def post(prompt:str):
 @threaded
 def generate_and_save(prompt, id, folder):
     # Using Default Payload
+    payload = {
+        "prompt": "1boy, pale skin, {purple eyes}, sanpaku, very long hair, pink hair, teeth, bloomers, slippers, waist apron, handgun, lollipop, spoon, best quality, amazing quality, very aesthetic, absurdres, masterpiece",
+        "height": 1216,
+        "width": 832,
+        "num_inference_steps": 28,
+        "guidance_scale": 5.0,
+        "clip_skip": 2,
+        "seed": -1
+    }
+
     save_path = f"{folder}/{id}.png"
-    generate_image(url="http://127.0.0.1:8000/generate", payload=None, save_path=save_path)
+    generate_image(url="http://127.0.0.1:8000/generate", payload=payload, save_path=save_path)
     return True
     # output = client.run(
     #     "playgroundai/playground-v2.5-1024px-aesthetic:a45f82a1382bed5c7aeb861dac7c7d191b0fdf74d8d57c4a0e6ed7d4d0bf7d24",
@@ -102,4 +114,5 @@ def generate_and_save(prompt, id, folder):
     # Image.open(requests.get(output[0], stream=True).raw).save(f"{folder}/{id}.png")
     # return True
 
-if __name__ == '__main__': uvicorn.run("main:app", host='0.0.0.0', port=int(os.getenv("PORT", default=5000)))
+if __name__ == '__main__':
+    uvicorn.run("main:app", host='0.0.0.0', port=int(os.getenv("PORT", default=5000)))

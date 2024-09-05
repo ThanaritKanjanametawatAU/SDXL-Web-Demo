@@ -20,6 +20,7 @@ class ImageRequest(BaseModel):
     num_inference_steps: int = 28
     guidance_scale: float = 5.0
     clip_skip: int = 2
+    seed: int = -1
 
 # Helper function to encode image to Base64
 def file_to_base64(image):
@@ -54,7 +55,7 @@ def decode_base64_to_image(encoding):
 async def generate(request: ImageRequest):
     try:
         # Generate the image using the model
-        image = generate_image(pipe, request.prompt, request.height, request.width, request.num_inference_steps, request.guidance_scale, request.clip_skip)
+        image = generate_image(pipe, request.prompt, request.height, request.width, request.num_inference_steps, request.guidance_scale, request.clip_skip, request.seed)
 
         # Convert the image to base64 and return as Data URI
         img_base64 = file_to_base64(image)
