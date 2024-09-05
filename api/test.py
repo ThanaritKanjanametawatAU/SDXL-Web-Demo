@@ -39,4 +39,4 @@ negative_prompt = "nsfw, nudity, lowres, bad, error, fewer, extra, missing, wors
 image = pipe(prompt=prompt, negative_prompt=negative_prompt, height=1216, width=832, num_inference_steps=28, guidance_scale=5, clip_skip=2).images[0]
 
 # Save the generated image
-image.save("output_image.png")
+image.save("1.png")

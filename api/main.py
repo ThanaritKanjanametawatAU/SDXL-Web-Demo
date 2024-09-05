@@ -9,7 +9,7 @@ import requests
 app = FastAPI()
 
 # Load the model when the app starts
-model_path = "model/NovelAIv2-7.safetensors"
+model_path = "api/model/NovelAIv2-7.safetensors"
 pipe = load_model(model_path)
 
 # Define a request body using Pydantic
@@ -66,3 +66,8 @@ async def generate(request: ImageRequest):
 @app.get("/")
 async def root():
     return {"message": "Stable Diffusion XL FastAPI is running."}
+
+if __name__ == '__main__':
+    import uvicorn
+    # With Reload
+    uvicorn.run(app, host="0.0.0.0", port=8000)

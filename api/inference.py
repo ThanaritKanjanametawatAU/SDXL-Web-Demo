@@ -1,6 +1,7 @@
 import torch
 from diffusers import StableDiffusionXLPipeline, DDIMScheduler
 from safetensors.torch import load_file
+import torch
 
 
 # Load the StableDiffusionXLPipeline and your NovelAI model
@@ -21,8 +22,15 @@ def load_model(model_path: str):
 
 
 def generate_image(pipe, prompt: str, height: int = 1216, width: int = 832, num_inference_steps: int = 28,
-                   guidance_scale: float = 5, clip_skip: int = 2):
+                   guidance_scale: float = 5, clip_skip: int = 2, seed: int = -1):
     # Generate image using the provided parameters
+    if seed != -1:
+        torch.manual_seed(seed)
+    else:
+        # Random seed for each generation
+        seed_used = torch.randint(0, 2 ** 32, (1,)).item()
+        torch.manual_seed(seed_used)
+
     image = pipe(prompt=prompt, height=height, width=width, num_inference_steps=num_inference_steps,
                  guidance_scale=guidance_scale, clip_skip=clip_skip).images[0]
     return image
