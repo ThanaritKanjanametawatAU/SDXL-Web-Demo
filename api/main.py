@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from inference import load_model, generate_image
+
+from inference import load_model, generate_image_backend
 from io import BytesIO
 from PIL import Image
 import base64
@@ -28,7 +29,7 @@ def file_to_base64(image):
     image.save(img_bytes, format="PNG")
     img_bytes.seek(0)
     base64_str = base64.b64encode(img_bytes.getvalue()).decode("utf-8")
-    return "database:image/png;base64," + base64_str
+    return "data:image/png;base64," + base64_str
 
 # Function to decode base64 or handle image URL
 def decode_base64_to_image(encoding):
@@ -42,7 +43,7 @@ def decode_base64_to_image(encoding):
             raise HTTPException(status_code=500, detail="Invalid image URL") from e
 
     # Handle Base64-encoded images
-    if encoding.startswith("database:image/"):
+    if encoding.startswith("data:image/"):
         encoding = encoding.split(",")[1]
 
     try:
@@ -55,7 +56,7 @@ def decode_base64_to_image(encoding):
 async def generate(request: ImageRequest):
     try:
         # Generate the image using the model
-        image = generate_image(pipe, request.prompt, request.height, request.width, request.num_inference_steps, request.guidance_scale, request.clip_skip, request.seed)
+        image = generate_image_backend(pipe, request.prompt, request.height, request.width, request.num_inference_steps, request.guidance_scale, request.clip_skip, request.seed)
 
         # Convert the image to base64 and return as Data URI
         img_base64 = file_to_base64(image)
@@ -67,8 +68,3 @@ async def generate(request: ImageRequest):
 @app.get("/")
 async def root():
     return {"message": "Stable Diffusion XL FastAPI is running."}
-
-if __name__ == '__main__':
-    import uvicorn
-    # With Reload
-    uvicorn.run(app, host="0.0.0.0", port=8000)

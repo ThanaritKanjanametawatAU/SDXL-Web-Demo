@@ -17,7 +17,7 @@ def load_model(model_path: str):
     return pipe
 
 
-def generate_image(pipe, prompt: str, height: int = 1216, width: int = 832, num_inference_steps: int = 28,
+def generate_image_backend(pipe, prompt: str, height: int = 1216, width: int = 832, num_inference_steps: int = 28,
                    guidance_scale: float = 5, clip_skip: int = 2, seed: int = -1):
     # Generate image using the provided parameters
     seed_used = seed

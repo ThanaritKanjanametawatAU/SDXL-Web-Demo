@@ -2,7 +2,7 @@
 python main.py
 
 # Start FastAPI server (In /api)
-python api/main.py
+python api/run_api.py
 
 # Expose Port 5000
 #ngrok http http://localhost:5000
