@@ -70,16 +70,18 @@ def home():
         Group(
             Label("Width", cls="prompt-label"),
             Div(
-                Input(type="range", id="width", name="width", min="64", max="2048", value="832", cls="range-input"),
-                Input(type="number", value="832", cls="form-control range-value", id="width-value"),
+                Input(type="range", id="width", name="width", min="64", max="2048", value="832", step="8",
+                      cls="range-input"),
+                Input(type="number", value="832", step="8", cls="form-control range-value", id="width-value"),
                 cls="range-container"
             )
         ),
         Group(
             Label("Height", cls="prompt-label"),
             Div(
-                Input(type="range", id="height", name="height", min="64", max="2048", value="1216", cls="range-input"),
-                Input(type="number", value="1216", cls="form-control range-value", id="height-value"),
+                Input(type="range", id="height", name="height", min="64", max="2048", value="1216", step="8",
+                      cls="range-input"),
+                Input(type="number", value="1216", step="8", cls="form-control range-value", id="height-value"),
                 cls="range-container"
             )
         ),
@@ -97,7 +99,7 @@ def home():
             Div(
                 Input(type="range", id="guidance_scale", name="guidance_scale", min="0", max="10", step="0.5",
                       value="5.0", cls="range-input"),
-                Input(type="number", value="5.0", step="0.5", cls="form-control range-value", id="guidance-value"),
+                Input(type="number", value="5", step="0.5", cls="form-control range-value", id="guidance-value"),
                 cls="range-container"
             )
         ),
@@ -134,33 +136,70 @@ def home():
         add,
         gen_list,
         Script("""
-            document.querySelectorAll('.range-container').forEach(container => {
+            // Function to handle width and height inputs
+            function setupDivisibleBy8Input(container) {
                 const rangeInput = container.querySelector('.range-input');
                 const valueInput = container.querySelector('.range-value');
 
-                rangeInput.addEventListener('input', () => {
-                    valueInput.value = rangeInput.value;
-                });
+                function roundToNearest8(value) {
+                    return Math.round(value / 8) * 8;
+                }
 
-                valueInput.addEventListener('input', () => {
-                    let value = parseFloat(valueInput.value);
+                function updateValue(value, shouldRound = true) {
+                    let processedValue = shouldRound ? roundToNearest8(value) : value;
+                    const min = parseInt(rangeInput.min);
+                    const max = parseInt(rangeInput.max);
+
+                    if (shouldRound) {
+                        processedValue = Math.max(min, Math.min(max, processedValue));
+                        rangeInput.value = processedValue;
+                    }
+
+                    valueInput.value = processedValue;
+                }
+
+                rangeInput.addEventListener('input', () => updateValue(rangeInput.value));
+                valueInput.addEventListener('input', () => updateValue(valueInput.value, false));
+                valueInput.addEventListener('blur', () => {
+                    if (valueInput.value === '') {
+                        updateValue(rangeInput.value);
+                    } else {
+                        updateValue(valueInput.value);
+                    }
+                });
+            }
+
+            // Function to handle all other inputs
+            function setupOtherInput(container) {
+                const rangeInput = container.querySelector('.range-input');
+                const valueInput = container.querySelector('.range-value');
+
+                function updateValue(value) {
                     const min = parseFloat(rangeInput.min);
                     const max = parseFloat(rangeInput.max);
                     const step = parseFloat(rangeInput.step) || 1;
 
-                    value = Math.max(min, Math.min(max, value));
-                    value = Math.round(value / step) * step;
+                    let processedValue = Math.max(min, Math.min(max, parseFloat(value)));
+                    processedValue = Math.round(processedValue / step) * step;
 
-                    valueInput.value = value;
-                    rangeInput.value = value;
-                });
+                    rangeInput.value = processedValue;
+                    valueInput.value = processedValue;
+                }
 
+                rangeInput.addEventListener('input', () => updateValue(rangeInput.value));
+                valueInput.addEventListener('input', () => updateValue(valueInput.value));
                 valueInput.addEventListener('blur', () => {
                     if (valueInput.value === '') {
-                        valueInput.value = rangeInput.value;
+                        updateValue(rangeInput.value);
                     }
                 });
-            });
+            }
+
+            // Set up width and height inputs
+            document.querySelectorAll('#width .range-container, #height .range-container').forEach(setupDivisibleBy8Input);
+
+            // Set up all other inputs
+            document.querySelectorAll('.range-container:not(#width .range-container):not(#height .range-container)').forEach(setupOtherInput);
         """),
         cls='container'
     )
