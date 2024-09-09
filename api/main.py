@@ -28,7 +28,7 @@ def file_to_base64(image):
     image.save(img_bytes, format="PNG")
     img_bytes.seek(0)
     base64_str = base64.b64encode(img_bytes.getvalue()).decode("utf-8")
-    return "data:image/png;base64," + base64_str
+    return "database:image/png;base64," + base64_str
 
 # Function to decode base64 or handle image URL
 def decode_base64_to_image(encoding):
@@ -42,7 +42,7 @@ def decode_base64_to_image(encoding):
             raise HTTPException(status_code=500, detail="Invalid image URL") from e
 
     # Handle Base64-encoded images
-    if encoding.startswith("data:image/"):
+    if encoding.startswith("database:image/"):
         encoding = encoding.split(",")[1]
 
     try:

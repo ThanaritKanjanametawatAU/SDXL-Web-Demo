@@ -31,7 +31,7 @@ def decode_base64_to_image(encoding):
 
 
 
-def generate_image(url="http://127.0.0.1:8000/generate", payload=None, save_path="data/gens/something/1.png"):
+def generate_image(url="http://127.0.0.1:8000/generate", payload=None, save_path="database/gens/something/1.png"):
     # Define the payload for the POST
     if not payload:
         payload = {
