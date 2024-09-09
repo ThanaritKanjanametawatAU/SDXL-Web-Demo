@@ -1,7 +1,4 @@
-import torch
 from diffusers import StableDiffusionXLPipeline, DPMSolverMultistepScheduler
-import k_diffusion.sampling
-from safetensors.torch import load_file
 import torch
 
 

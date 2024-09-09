@@ -1,11 +1,10 @@
 import os
 from os.path import exists
-
 import requests
 import base64
 from io import BytesIO
 from PIL import Image
-import matplotlib.pyplot as plt
+
 
 # Helper function to decode base64 or handle image URL
 def decode_base64_to_image(encoding):

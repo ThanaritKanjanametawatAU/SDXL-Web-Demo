@@ -1,10 +1,8 @@
 from fasthtml.common import *
 from dotenv import load_dotenv
 from fastcore.parallel import threaded
-import uuid, os, uvicorn, requests
-from PIL import Image
+import uuid, uvicorn
 from api.call_api import *
-from pyngrok import ngrok
 
 load_dotenv()
 TESTVAR = os.environ.get("TESTVAR")
